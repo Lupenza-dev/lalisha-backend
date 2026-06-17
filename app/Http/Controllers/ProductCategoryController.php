@@ -2,64 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): Response
     {
-        return Inertia::render('system-settings/programs-categories/product-categories');
+        return Inertia::render('system-settings/programs-categories/product-categories', [
+            'items' => ProductCategory::query()->latest()->get(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:product_categories,name',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        ProductCategory::create($data);
+
+        return back()->with('success', 'Product category created successfully.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, ProductCategory $productCategory): RedirectResponse
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:product_categories,name,'.$productCategory->id,
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $productCategory->update($data);
+
+        return back()->with('success', 'Product category updated successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(ProductCategory $productCategory): RedirectResponse
     {
-        //
-    }
+        $productCategory->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return back()->with('success', 'Product category deleted successfully.');
     }
 }

@@ -1,47 +1,57 @@
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+} from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Cog, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Cog, LayoutGrid, ShoppingBag, UserRound } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const overviewItems: NavItem[] = [
     {
         title: 'Dashboard',
         url: '/dashboard',
         icon: LayoutGrid,
     },
-    {
-        title: 'System Settings',
-        url: '/system-settings',
-        icon: Cog,
-    },
+];
+
+const operationsItems: NavItem[] = [
     {
         title: 'Training Programs',
         url: '/training-programs',
         icon: BookOpen,
     },
-];
-
-const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        url: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
+        title: 'Shop Products',
+        url: '/shop-products',
+        icon: ShoppingBag,
     },
     {
-        title: 'Documentation',
-        url: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
+        title: 'Trainers',
+        url: '/trainers',
+        icon: UserRound,
+    },
+];
+
+const settingsItems: NavItem[] = [
+    {
+        title: 'System Settings',
+        url: '/system-settings',
+        icon: Cog,
     },
 ];
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
+        <Sidebar collapsible="icon" variant="inset" className="border-r border-sidebar-border/60">
+            <SidebarHeader className="border-b border-sidebar-border/40 pb-3">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
@@ -54,11 +64,12 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={overviewItems} label="Overview" />
+                <NavMain items={operationsItems} label="Operations" />
+                <NavMain items={settingsItems} label="Configuration" />
             </SidebarContent>
 
-            <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+            <SidebarFooter className="border-t border-sidebar-border/40">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

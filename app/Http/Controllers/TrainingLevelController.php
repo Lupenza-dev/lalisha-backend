@@ -2,64 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TrainingLevel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TrainingLevelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): Response
     {
-        return Inertia::render('system-settings/programs-categories/training-levels');
+        return Inertia::render('system-settings/programs-categories/training-levels', [
+            'items' => TrainingLevel::query()->latest()->get(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:training_levels,name',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        TrainingLevel::create($data);
+
+        return back()->with('success', 'Training level created successfully.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, TrainingLevel $trainingLevel): RedirectResponse
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:training_levels,name,'.$trainingLevel->id,
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $trainingLevel->update($data);
+
+        return back()->with('success', 'Training level updated successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(TrainingLevel $trainingLevel): RedirectResponse
     {
-        //
-    }
+        $trainingLevel->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return back()->with('success', 'Training level deleted successfully.');
     }
 }

@@ -2,64 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProgramType;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProgramTypeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): Response
     {
-        return Inertia::render('system-settings/programs-categories/program-types');
+        return Inertia::render('system-settings/programs-categories/program-types', [
+            'items' => ProgramType::query()->latest()->get(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:program_types,name',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        ProgramType::create($data);
+
+        return back()->with('success', 'Program type created successfully.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, ProgramType $programType): RedirectResponse
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:program_types,name,'.$programType->id,
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $programType->update($data);
+
+        return back()->with('success', 'Program type updated successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(ProgramType $programType): RedirectResponse
     {
-        //
-    }
+        $programType->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return back()->with('success', 'Program type deleted successfully.');
     }
 }
