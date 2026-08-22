@@ -13,7 +13,8 @@ class ShopProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $categoryId = fn (string $name) => ProductCategory::where('name', $name)->value('id');
+        // $categoryId = fn (string $name) => ProductCategory::where('name', $name)->value('id');
+        $categoryId = fn(string $name) => ProductCategory::where('name', $name)->value('id');
 
         $products = [
             [
