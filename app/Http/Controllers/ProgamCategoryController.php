@@ -22,6 +22,7 @@ class ProgamCategoryController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:program_categories,name',
             'description' => 'nullable|string',
+            'icon_name' => 'nullable|string|max:100',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -35,6 +36,7 @@ class ProgamCategoryController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:program_categories,name,'.$programCategory->id,
             'description' => 'nullable|string',
+            'icon_name' => 'nullable|string|max:100',
             'status' => 'required|in:active,inactive',
         ]);
 

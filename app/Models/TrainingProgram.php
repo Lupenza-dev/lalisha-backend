@@ -12,6 +12,7 @@ class TrainingProgram extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'time_type',
         'program_category_id',
         'program_type_id',

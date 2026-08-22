@@ -5,15 +5,28 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SystemSettingResource;
 use App\Models\ProgramCategory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProgramCategoryController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $query = ProgramCategory::query()->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status'));
+        }
+
+        if ($request->boolean('has_training_programs')) {
+            $query->whereHas('trainingPrograms', function (Builder $trainingPrograms) {
+                $trainingPrograms->where('status', 'active');
+            });
+        }
+
         return SystemSettingResource::collection(
-            ProgramCategory::query()->latest()->paginate(15)
+            $query->paginate($request->integer('per_page', 15))
         )->response();
     }
 
@@ -22,6 +35,7 @@ class ProgramCategoryController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:program_categories,name',
             'description' => 'nullable|string',
+            'icon_name' => 'nullable|string|max:100',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -43,6 +57,7 @@ class ProgramCategoryController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:program_categories,name,'.$programCategory->id,
             'description' => 'nullable|string',
+            'icon_name' => 'nullable|string|max:100',
             'status' => 'required|in:active,inactive',
         ]);
 

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { formatTZS } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Edit, MoreHorizontal, Plus, Trash2, User, Users } from 'lucide-react';
 import PageHeader from '@/components/page-header';
@@ -106,7 +107,7 @@ export default function Trainer({ items }: Props) {
             {
                 accessorKey: 'session_price',
                 header: 'Session Price',
-                cell: ({ row }) => <span>${Number(row.original.session_price).toFixed(2)}</span>,
+                cell: ({ row }) => <span>{formatTZS(row.original.session_price)}</span>,
             },
             {
                 accessorKey: 'availability',

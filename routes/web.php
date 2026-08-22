@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProgamCategoryController;
 use App\Http\Controllers\ProgamController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\ProgramTypeController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShopProductController;
 use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\TrainerSessionBookingController;
 use App\Http\Controllers\TrainingCertificateController;
 use App\Http\Controllers\TrainingLevelController;
 use App\Models\ProductCategory;
@@ -15,6 +17,7 @@ use App\Models\ShopProduct;
 use App\Models\Trainer;
 use App\Models\TrainingProgram;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -42,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
                     'name' => $t->name,
                     'email' => $t->email,
                     'image_url' => $t->image
-                        ? \Illuminate\Support\Facades\Storage::disk('public')->url($t->image)
+                        ? Storage::disk('public')->url($t->image)
                         : null,
                     'program_type' => $t->programType?->name,
                     'training_level' => $t->trainingLevel?->name,
@@ -55,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
                 ->get()
                 ->map(fn (TrainingProgram $p) => [
                     'id' => $p->id,
+                    'name' => $p->name,
                     'price' => (float) $p->price,
                     'time_type' => $p->time_type,
                     'program_category' => $p->programCategory?->name,
@@ -72,6 +76,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('training-programs', ProgamController::class);
     Route::resource('shop-products', ShopProductController::class);
     Route::resource('trainers', TrainerController::class);
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('trainer-bookings', [TrainerSessionBookingController::class, 'index'])->name('trainer-bookings.index');
 });
 
 require __DIR__.'/settings.php';

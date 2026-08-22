@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DollarSign, FileText, ImagePlus, Layers, Tag, Upload, X } from 'lucide-react';
+import { Banknote, FileText, ImagePlus, Layers, Tag, Upload, X } from 'lucide-react';
 
 export type SelectOption = { id: number; name: string };
 
@@ -193,7 +193,7 @@ export default function ShopProductForm({ mode, initial, productCategories }: Pr
                                 Price <span className="text-destructive">*</span>
                             </Label>
                             <div className="relative">
-                                <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                     id="price"
                                     type="number"
@@ -215,7 +215,7 @@ export default function ShopProductForm({ mode, initial, productCategories }: Pr
                                     Offer Price <span className="text-destructive">*</span>
                                 </Label>
                                 <div className="relative">
-                                    <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                    <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                     <Input
                                         id="offer_price"
                                         type="number"

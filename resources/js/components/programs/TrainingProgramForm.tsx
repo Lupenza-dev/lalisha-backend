@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DollarSign, Film, ImagePlus, Layers, Plus, Star, Trash2, Upload, X } from 'lucide-react';
+import { Banknote, Film, ImagePlus, Layers, Plus, Star, Trash2, Upload, X } from 'lucide-react';
 
 export type SelectOption = { id: number; name: string };
 
@@ -19,6 +19,7 @@ export type ExistingClip = {
 
 export type TrainingProgramFormInitial = {
     id?: number;
+    name: string;
     time_type: '' | 'weekly' | 'monthly' | 'days';
     program_category_id: number | '';
     program_type_id: number | '';
@@ -39,6 +40,7 @@ interface Props {
 type NewClip = { name: string; file: File | null };
 
 type FormPayload = {
+    name: string;
     time_type: string;
     program_category_id: number | '';
     program_type_id: number | '';
@@ -57,6 +59,7 @@ export default function TrainingProgramForm({ mode, initial, programCategories, 
     const [coverPreview, setCoverPreview] = useState<string | null>(initial.cover_image_url ?? null);
 
     const { data, setData, post, processing, errors, progress } = useForm<FormPayload>({
+        name: initial.name ?? '',
         time_type: initial.time_type || '',
         program_category_id: initial.program_category_id ?? '',
         program_type_id: initial.program_type_id ?? '',
@@ -132,6 +135,20 @@ export default function TrainingProgramForm({ mode, initial, programCategories, 
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                        <div className="space-y-2 md:col-span-3">
+                            <Label htmlFor="name">
+                                Program Name <span className="text-destructive">*</span>
+                            </Label>
+                            <Input
+                                id="name"
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                                placeholder="Enter training program name"
+                                maxLength={255}
+                                required
+                            />
+                            {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
+                        </div>
                         <div className="space-y-2">
                             <Label htmlFor="time_type">
                                 Time Type <span className="text-destructive">*</span>
@@ -190,7 +207,7 @@ export default function TrainingProgramForm({ mode, initial, programCategories, 
             <Card>
                 <CardHeader>
                     <div className="flex items-center gap-2">
-                        <DollarSign className="h-5 w-5 text-primary" />
+                        <Banknote className="h-5 w-5 text-primary" />
                         <CardTitle className="text-lg">Pricing</CardTitle>
                     </div>
                     <CardDescription>Set the enrollment price for this training program.</CardDescription>
@@ -199,7 +216,7 @@ export default function TrainingProgramForm({ mode, initial, programCategories, 
                     <div className="max-w-sm">
                         <Label htmlFor="price">Price <span className="text-destructive">*</span></Label>
                         <div className="relative mt-2">
-                            <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                            <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
                                 id="price"
                                 type="number"

@@ -11,6 +11,7 @@ export default function ProgramCategories({ items }: Props) {
             singular="Program Category"
             resource="program-categories"
             items={items}
+            showIconField
         />
     );
 }

@@ -42,6 +42,7 @@ export type SystemSettingItem = {
     id: number;
     name: string;
     description: string | null;
+    icon_name?: string | null;
     status: 'active' | 'inactive';
     created_at: string;
     updated_at: string;
@@ -52,17 +53,19 @@ interface ResourceManagerProps {
     singular: string; // e.g. "Program Category"
     resource: string; // route base, e.g. "program-categories"
     items: SystemSettingItem[];
+    showIconField?: boolean;
 }
 
 type FormState = {
     name: string;
     description: string;
+    icon_name: string;
     status: 'active' | 'inactive';
 };
 
-const emptyForm: FormState = { name: '', description: '', status: 'active' };
+const emptyForm: FormState = { name: '', description: '', icon_name: '', status: 'active' };
 
-export default function ResourceManager({ title, singular, resource, items }: ResourceManagerProps) {
+export default function ResourceManager({ title, singular, resource, items, showIconField = false }: ResourceManagerProps) {
     useFlashToast();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editing, setEditing] = useState<SystemSettingItem | null>(null);
@@ -88,6 +91,7 @@ export default function ResourceManager({ title, singular, resource, items }: Re
         setData({
             name: item.name,
             description: item.description ?? '',
+            icon_name: item.icon_name ?? '',
             status: item.status,
         });
         setIsModalOpen(true);
@@ -267,6 +271,20 @@ export default function ResourceManager({ title, singular, resource, items }: Re
                                         <p className="text-sm text-red-600">{errors.name}</p>
                                     )}
                                 </div>
+                                {showIconField && (
+                                    <div className="space-y-2">
+                                        <Label htmlFor="icon_name">Icon Name</Label>
+                                        <Input
+                                            id="icon_name"
+                                            value={data.icon_name}
+                                            onChange={(e) => setData('icon_name', e.target.value)}
+                                            placeholder="e.g. folder-open, award, star"
+                                        />
+                                        {errors.icon_name && (
+                                            <p className="text-sm text-red-600">{errors.icon_name}</p>
+                                        )}
+                                    </div>
+                                )}
                                 <div className="space-y-2">
                                     <Label htmlFor="description">Description</Label>
                                     <Textarea

@@ -41,6 +41,7 @@ export default function TrainingProgramCreate({ programCategories, programTypes 
                 <TrainingProgramForm
                     mode="create"
                     initial={{
+                        name: '',
                         time_type: '',
                         program_category_id: '',
                         program_type_id: '',

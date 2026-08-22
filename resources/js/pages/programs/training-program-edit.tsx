@@ -17,6 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface ProgramProp {
     id: number;
+    name: string;
     time_type: 'weekly' | 'monthly' | 'days';
     program_category_id: number;
     program_type_id: number;
@@ -56,6 +57,7 @@ export default function TrainingProgramEdit({ program, programCategories, progra
                     mode="edit"
                     initial={{
                         id: program.id,
+                        name: program.name,
                         time_type: program.time_type,
                         program_category_id: program.program_category_id,
                         program_type_id: program.program_type_id,

@@ -17,6 +17,7 @@ class TrainingProgramResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'time_type' => $this->time_type,
             'price' => (float) $this->price,
             'description' => $this->description,

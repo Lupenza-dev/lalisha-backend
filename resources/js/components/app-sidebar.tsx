@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Cog, LayoutGrid, ShoppingBag, UserRound } from 'lucide-react';
+import { BookOpen, CalendarCheck, Cog, LayoutGrid, ReceiptText, ShoppingBag, UserRound } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const overviewItems: NavItem[] = [
@@ -34,9 +34,19 @@ const operationsItems: NavItem[] = [
         icon: ShoppingBag,
     },
     {
+        title: 'Orders',
+        url: '/orders',
+        icon: ReceiptText,
+    },
+    {
         title: 'Trainers',
         url: '/trainers',
         icon: UserRound,
+    },
+    {
+        title: 'Trainer Bookings',
+        url: '/trainer-bookings',
+        icon: CalendarCheck,
     },
 ];
 

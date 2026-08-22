@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { formatTZS } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Dumbbell, Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import PageHeader from '@/components/page-header';
@@ -26,6 +27,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type ProgramRow = {
     id: number;
+    name: string;
     time_type: string;
     price: string | number;
     status: 'active' | 'inactive';
@@ -45,7 +47,7 @@ export default function TrainingProgram({ items }: Props) {
     const handleDelete = (item: ProgramRow) => {
         Swal.fire({
             title: 'Are you sure?',
-            text: `Delete training program #${item.id}? This will also remove its clips. This cannot be undone.`,
+            text: `Delete ${item.name}? This will also remove its clips. This cannot be undone.`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#dc2626',
@@ -67,9 +69,9 @@ export default function TrainingProgram({ items }: Props) {
     const columns = useMemo<ColumnDef<ProgramRow>[]>(
         () => [
             {
-                accessorKey: 'id',
-                header: 'ID',
-                cell: ({ row }) => <span className="font-medium">#{row.original.id}</span>,
+                accessorKey: 'name',
+                header: 'Name',
+                cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
             },
             {
                 id: 'category',
@@ -89,7 +91,7 @@ export default function TrainingProgram({ items }: Props) {
             {
                 accessorKey: 'price',
                 header: 'Price',
-                cell: ({ row }) => <span>${Number(row.original.price).toFixed(2)}</span>,
+                cell: ({ row }) => <span>{formatTZS(row.original.price)}</span>,
             },
             {
                 accessorKey: 'clips_count',
@@ -171,7 +173,7 @@ export default function TrainingProgram({ items }: Props) {
                         columns={columns}
                         data={items}
                         searchPlaceholder="Search training programs..."
-                        searchColumn="time_type"
+                        searchColumn="name"
                     />
                 </div>
             </div>

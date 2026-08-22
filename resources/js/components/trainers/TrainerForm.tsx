@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import {
     Award,
     CalendarCheck,
-    DollarSign,
+    Banknote,
     GraduationCap,
     ImagePlus,
     Upload,
@@ -258,7 +258,7 @@ export default function TrainerForm({ mode, initial, programTypes, trainingLevel
                                 Book Session Price <span className="text-destructive">*</span>
                             </Label>
                             <div className="relative">
-                                <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                     id="session_price"
                                     type="number"

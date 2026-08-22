@@ -45,6 +45,7 @@ class ProgamController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
+            'name' => 'required|string|max:255',
             'time_type' => 'required|in:weekly,monthly,days',
             'program_category_id' => 'required|exists:program_categories,id',
             'program_type_id' => 'required|exists:program_types,id',
@@ -59,6 +60,7 @@ class ProgamController extends Controller
 
         DB::transaction(function () use ($request, $data) {
             $program = TrainingProgram::create([
+                'name' => $data['name'],
                 'time_type' => $data['time_type'],
                 'program_category_id' => $data['program_category_id'],
                 'program_type_id' => $data['program_type_id'],
@@ -92,6 +94,7 @@ class ProgamController extends Controller
         return Inertia::render('programs/training-program-edit', [
             'program' => [
                 'id' => $trainingProgram->id,
+                'name' => $trainingProgram->name,
                 'time_type' => $trainingProgram->time_type,
                 'program_category_id' => $trainingProgram->program_category_id,
                 'program_type_id' => $trainingProgram->program_type_id,
@@ -121,6 +124,7 @@ class ProgamController extends Controller
     public function update(Request $request, TrainingProgram $trainingProgram): RedirectResponse
     {
         $data = $request->validate([
+            'name' => 'required|string|max:255',
             'time_type' => 'required|in:weekly,monthly,days',
             'program_category_id' => 'required|exists:program_categories,id',
             'program_type_id' => 'required|exists:program_types,id',
@@ -138,6 +142,7 @@ class ProgamController extends Controller
 
         DB::transaction(function () use ($request, $data, $trainingProgram) {
             $payload = [
+                'name' => $data['name'],
                 'time_type' => $data['time_type'],
                 'program_category_id' => $data['program_category_id'],
                 'program_type_id' => $data['program_type_id'],

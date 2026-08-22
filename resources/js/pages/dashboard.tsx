@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { formatTZS } from '@/lib/utils';
 import {
     ArrowUpRight,
     BookOpen,
@@ -39,6 +40,7 @@ interface TrainerRow {
 
 interface ProgramRow {
     id: number;
+    name: string;
     price: number;
     time_type: string;
     program_category: string | null;
@@ -264,15 +266,14 @@ export default function Dashboard({ stats, latestTrainers, latestPrograms }: Pro
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="truncate text-sm font-medium">
-                                            {program.program_category ?? 'Untitled'} •{' '}
-                                            <span className="text-muted-foreground">{program.program_type ?? '—'}</span>
+                                            {program.name}
                                         </p>
                                         <p className="text-xs capitalize text-muted-foreground">
-                                            {program.time_type}
+                                            {program.program_category ?? '—'} • {program.program_type ?? '—'} • {program.time_type}
                                         </p>
                                     </div>
                                     <span className="shrink-0 text-sm font-semibold">
-                                        ${program.price.toFixed(2)}
+                                        {formatTZS(program.price)}
                                     </span>
                                 </Link>
                             ))}
