@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { formatTZS } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
@@ -39,7 +40,7 @@ export const shopProductColumns: ColumnDef<ShopProduct>[] = [
         accessorKey: 'price',
         header: 'Price',
         cell: ({ row }) => {
-            return <div>${row.getValue('price')}</div>;
+            return <div>{formatTZS(row.getValue('price'))}</div>;
         },
     },
     {
@@ -59,7 +60,7 @@ export const shopProductColumns: ColumnDef<ShopProduct>[] = [
         header: 'Offer Price',
         cell: ({ row }) => {
             const offerPrice = row.getValue('offer_price') as string | null;
-            return <div>{offerPrice ? `$${offerPrice}` : '—'}</div>;
+            return <div>{offerPrice ? formatTZS(offerPrice) : '—'}</div>;
         },
     },
     {

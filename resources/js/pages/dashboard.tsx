@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { formatTZS } from '@/lib/utils';
 import {
     ArrowUpRight,
     BookOpen,
@@ -272,7 +273,7 @@ export default function Dashboard({ stats, latestTrainers, latestPrograms }: Pro
                                         </p>
                                     </div>
                                     <span className="shrink-0 text-sm font-semibold">
-                                        ${program.price.toFixed(2)}
+                                        {formatTZS(program.price)}
                                     </span>
                                 </Link>
                             ))}

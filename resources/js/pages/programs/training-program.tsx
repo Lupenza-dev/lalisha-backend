@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { formatTZS } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Dumbbell, Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import PageHeader from '@/components/page-header';
@@ -89,7 +90,7 @@ export default function TrainingProgram({ items }: Props) {
             {
                 accessorKey: 'price',
                 header: 'Price',
-                cell: ({ row }) => <span>${Number(row.original.price).toFixed(2)}</span>,
+                cell: ({ row }) => <span>{formatTZS(row.original.price)}</span>,
             },
             {
                 accessorKey: 'clips_count',

@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { formatTZS } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
@@ -53,7 +54,7 @@ export const trainerColumns: ColumnDef<Trainer>[] = [
         accessorKey: 'session_price',
         header: 'Session Price',
         cell: ({ row }) => {
-            return <div>${row.getValue('session_price')}</div>;
+            return <div>{formatTZS(row.getValue('session_price'))}</div>;
         },
     },
     {

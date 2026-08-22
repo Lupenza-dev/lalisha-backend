@@ -9,5 +9,5 @@ class ProgramCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'status'];
+    protected $fillable = ['name', 'description', 'icon_name', 'status'];
 }

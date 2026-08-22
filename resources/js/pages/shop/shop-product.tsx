@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { formatTZS } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Edit, MoreHorizontal, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import PageHeader from '@/components/page-header';
@@ -80,7 +81,7 @@ export default function ShopProduct({ items }: Props) {
             {
                 accessorKey: 'price',
                 header: 'Price',
-                cell: ({ row }) => <span>${Number(row.original.price).toFixed(2)}</span>,
+                cell: ({ row }) => <span>{formatTZS(row.original.price)}</span>,
             },
             {
                 id: 'offer',
@@ -88,7 +89,7 @@ export default function ShopProduct({ items }: Props) {
                 cell: ({ row }) =>
                     row.original.has_offer ? (
                         <span className="text-green-600">
-                            ${Number(row.original.offer_price ?? 0).toFixed(2)}
+                            {formatTZS(row.original.offer_price ?? 0)}
                         </span>
                     ) : (
                         <span className="text-muted-foreground">—</span>

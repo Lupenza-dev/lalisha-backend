@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DollarSign, Film, ImagePlus, Layers, Plus, Star, Trash2, Upload, X } from 'lucide-react';
+import { Banknote, Film, ImagePlus, Layers, Plus, Star, Trash2, Upload, X } from 'lucide-react';
 
 export type SelectOption = { id: number; name: string };
 
@@ -190,7 +190,7 @@ export default function TrainingProgramForm({ mode, initial, programCategories, 
             <Card>
                 <CardHeader>
                     <div className="flex items-center gap-2">
-                        <DollarSign className="h-5 w-5 text-primary" />
+                        <Banknote className="h-5 w-5 text-primary" />
                         <CardTitle className="text-lg">Pricing</CardTitle>
                     </div>
                     <CardDescription>Set the enrollment price for this training program.</CardDescription>
@@ -199,7 +199,7 @@ export default function TrainingProgramForm({ mode, initial, programCategories, 
                     <div className="max-w-sm">
                         <Label htmlFor="price">Price <span className="text-destructive">*</span></Label>
                         <div className="relative mt-2">
-                            <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                            <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
                                 id="price"
                                 type="number"
