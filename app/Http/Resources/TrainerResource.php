@@ -19,6 +19,7 @@ class TrainerResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'about' => $this->about,
             'image_url' => $this->image
                 ? Storage::disk('public')->url($this->image)
                 : null,

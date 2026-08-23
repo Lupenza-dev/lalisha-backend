@@ -16,6 +16,7 @@ interface TrainerProp {
     id: number;
     name: string;
     email: string;
+    about: string | null;
     program_type_id: number;
     training_level_id: number;
     session_price: string | number;
@@ -57,6 +58,7 @@ export default function TrainerEdit({ trainer, programTypes, trainingLevels }: P
                         id: trainer.id,
                         name: trainer.name,
                         email: trainer.email,
+                        about: trainer.about ?? '',
                         program_type_id: trainer.program_type_id,
                         training_level_id: trainer.training_level_id,
                         session_price: trainer.session_price,

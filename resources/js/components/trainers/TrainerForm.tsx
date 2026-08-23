@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { MoneyInput } from '@/components/money-input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -24,6 +25,7 @@ export type TrainerFormInitial = {
     id?: number;
     name: string;
     email: string;
+    about: string;
     program_type_id: number | '';
     training_level_id: number | '';
     session_price: string | number;
@@ -44,6 +46,7 @@ interface Props {
 type FormPayload = {
     name: string;
     email: string;
+    about: string;
     program_type_id: number | '';
     training_level_id: number | '';
     session_price: string | number;
@@ -62,6 +65,7 @@ export default function TrainerForm({ mode, initial, programTypes, trainingLevel
     const { data, setData, post, processing, errors, progress } = useForm<FormPayload>({
         name: initial.name ?? '',
         email: initial.email ?? '',
+        about: initial.about ?? '',
         program_type_id: initial.program_type_id ?? '',
         training_level_id: initial.training_level_id ?? '',
         session_price: initial.session_price ?? '',
@@ -138,6 +142,22 @@ export default function TrainerForm({ mode, initial, programTypes, trainingLevel
                                 required
                             />
                             {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+                        </div>
+                    </div>
+
+                    <div className="mt-6 space-y-2">
+                        <Label htmlFor="about">About Trainer</Label>
+                        <Textarea
+                            id="about"
+                            value={data.about}
+                            onChange={(e) => setData('about', e.target.value)}
+                            placeholder="Describe the trainer's coaching style, experience, and approach..."
+                            rows={5}
+                            maxLength={5000}
+                        />
+                        <div className="flex items-center justify-between">
+                            {errors.about ? <p className="text-sm text-red-600">{errors.about}</p> : <span />}
+                            <span className="text-xs text-muted-foreground">{data.about.length}/5000</span>
                         </div>
                     </div>
 
@@ -259,13 +279,10 @@ export default function TrainerForm({ mode, initial, programTypes, trainingLevel
                             </Label>
                             <div className="relative">
                                 <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                <Input
+                                <MoneyInput
                                     id="session_price"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
                                     value={data.session_price}
-                                    onChange={(e) => setData('session_price', e.target.value)}
+                                    onValueChange={(value) => setData('session_price', value)}
                                     placeholder="0.00"
                                     className="pl-10"
                                     required

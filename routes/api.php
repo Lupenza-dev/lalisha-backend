@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\V1\TrainingLevelController;
 use App\Http\Controllers\Api\V1\TrainingProgramController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->name('api.')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 

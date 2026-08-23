@@ -124,9 +124,9 @@ class ShopProductController extends Controller
             'product_category_id' => 'required|exists:product_categories,id',
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price' => ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'],
             'has_offer' => 'nullable|boolean',
-            'offer_price' => 'nullable|numeric|min:0|required_if:has_offer,true|lt:price',
+            'offer_price' => ['nullable', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99', 'required_if:has_offer,true', 'lt:price'],
             'image' => 'nullable|image|max:10240',
             'remove_image' => 'nullable|boolean',
         ];

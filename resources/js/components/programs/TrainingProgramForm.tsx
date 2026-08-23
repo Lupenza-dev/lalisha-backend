@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { MoneyInput } from '@/components/money-input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -217,13 +218,10 @@ export default function TrainingProgramForm({ mode, initial, programCategories, 
                         <Label htmlFor="price">Price <span className="text-destructive">*</span></Label>
                         <div className="relative mt-2">
                             <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
+                            <MoneyInput
                                 id="price"
-                                type="number"
-                                step="0.01"
-                                min="0"
                                 value={data.price}
-                                onChange={(e) => setData('price', e.target.value)}
+                                onValueChange={(value) => setData('price', value)}
                                 placeholder="0.00"
                                 className="pl-10"
                                 required

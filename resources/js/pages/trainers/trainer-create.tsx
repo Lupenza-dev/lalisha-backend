@@ -41,6 +41,7 @@ export default function TrainerCreate({ programTypes, trainingLevels }: Props) {
                     initial={{
                         name: '',
                         email: '',
+                        about: '',
                         program_type_id: '',
                         training_level_id: '',
                         session_price: '',
