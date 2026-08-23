@@ -21,7 +21,13 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('welcome', [
+        'platformStats' => [
+            'programs' => TrainingProgram::where('status', 'active')->count(),
+            'trainers' => Trainer::where('status', 'active')->count(),
+            'products' => ShopProduct::where('status', 'active')->count(),
+        ],
+    ]);
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {
