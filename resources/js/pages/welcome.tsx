@@ -1,3 +1,4 @@
+import BrandLogoImage from '@/components/brand-logo-image';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
@@ -56,18 +57,7 @@ const journey = [
 ];
 
 function BrandMark() {
-    return (
-        <div className="flex items-center gap-3">
-            <div className="relative flex size-11 items-center justify-center rounded-[15px] bg-[#2a1731] text-white shadow-[0_8px_22px_rgba(51,21,67,0.2)]">
-                <Dumbbell className="size-5" strokeWidth={2.4} />
-                <span className="absolute -top-1 -right-1 size-3 rounded-full border-2 border-[#fbf9fc] bg-[#d9f55a]" />
-            </div>
-            <div>
-                <p className="text-[17px] leading-none font-extrabold tracking-[-0.03em] text-[#24152b]">Lalisha</p>
-                <p className="mt-1 text-[9px] font-extrabold tracking-[0.22em] text-[#8c7c94]">FITZONE</p>
-            </div>
-        </div>
-    );
+    return <BrandLogoImage className="h-12 w-48 sm:h-14 sm:w-56" />;
 }
 
 function HeroTrainingLane({ stats }: { stats: PlatformStats }) {
