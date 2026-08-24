@@ -16,11 +16,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('Admin@123'),
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'admin@gmail.com',
+        //     'password' => Hash::make('Admin@123'),
+        // ]);
 
         $this->call([
             ProgramCategorySeeder::class,
@@ -28,9 +28,9 @@ class DatabaseSeeder extends Seeder
             ProgramTypeSeeder::class,
             TrainingLevelSeeder::class,
             TrainingCertificateSeeder::class,
-            TrainerSeeder::class,
-            TrainingProgramSeeder::class,
-            ShopProductSeeder::class,
+           // TrainerSeeder::class,
+           // TrainingProgramSeeder::class,
+           // ShopProductSeeder::class,
         ]);
     }
 }
