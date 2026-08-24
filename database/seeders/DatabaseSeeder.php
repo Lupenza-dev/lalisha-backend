@@ -16,11 +16,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'admin@gmail.com',
-        //     'password' => Hash::make('Admin@123'),
-        // ]);
+        // $this->call(RoleSeeder::class);
+
+        $admin = User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('Admin@123'),
+        ]);
+
+        $admin->assignRole('Admin');
 
         $this->call([
             ProgramCategorySeeder::class,
@@ -28,6 +32,7 @@ class DatabaseSeeder extends Seeder
             ProgramTypeSeeder::class,
             TrainingLevelSeeder::class,
             TrainingCertificateSeeder::class,
+            RoleSeeder::class
            // TrainerSeeder::class,
            // TrainingProgramSeeder::class,
            // ShopProductSeeder::class,

@@ -5,9 +5,11 @@ import {
     ArrowRight,
     BarChart3,
     CalendarCheck,
+    CalendarDays,
     Check,
     ChevronRight,
-    Dumbbell,
+    Clock3,
+    Medal,
     MoveUpRight,
     Package,
     Play,
@@ -23,32 +25,44 @@ type PlatformStats = {
     products: number;
 };
 
-const features = [
-    {
-        icon: Dumbbell,
-        eyebrow: 'PROGRAMS',
-        title: 'Training built around a real goal.',
-        description: 'Explore focused programs, understand the benefits, and choose the format that fits your routine.',
-        accent: 'bg-[#e8dcff]',
-        iconColor: 'text-[#662199]',
-    },
-    {
-        icon: UserRound,
-        eyebrow: 'TRAINERS',
-        title: 'A coach who matches your pace.',
-        description: 'Compare specialties, levels, session prices, and availability before requesting your session.',
-        accent: 'bg-[#e6f5b7]',
-        iconColor: 'text-[#536d0d]',
-    },
-    {
-        icon: ShoppingBag,
-        eyebrow: 'FITNESS SHOP',
-        title: 'The essentials that keep you moving.',
-        description: 'Order training products in the same place you manage programs, bookings, and checkout.',
-        accent: 'bg-[#ffe3d6]',
-        iconColor: 'text-[#a8451d]',
-    },
-];
+type FeaturedProgram = {
+    id: number;
+    name: string;
+    time_type: string;
+    description: string;
+    price: number;
+    cover_image_url: string | null;
+    program_category: string | null;
+    program_type: string | null;
+};
+
+type FeaturedTrainer = {
+    id: number;
+    name: string;
+    image_url: string | null;
+    program_type: string | null;
+    training_level: string | null;
+    session_price: number;
+    availability: string;
+};
+
+type FeaturedProduct = {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    has_offer: boolean;
+    offer_price: number | null;
+    image_url: string | null;
+    product_category: string | null;
+};
+
+type WelcomeProps = SharedData & {
+    platformStats: PlatformStats;
+    featuredPrograms: FeaturedProgram[];
+    featuredTrainers: FeaturedTrainer[];
+    featuredProducts: FeaturedProduct[];
+};
 
 const journey = [
     { step: '01', title: 'Choose your lane', text: 'Browse programs by training category and goal.' },
@@ -56,8 +70,22 @@ const journey = [
     { step: '03', title: 'Keep everything together', text: 'Track orders and session requests from your profile.' },
 ];
 
+const catalogueNavigation = [
+    { label: 'Programs', routeName: 'explore.programs' },
+    { label: 'Trainers', routeName: 'explore.trainers' },
+    { label: 'Shop', routeName: 'explore.shop' },
+];
+
 function BrandMark() {
     return <BrandLogoImage className="h-12 w-48 sm:h-14 sm:w-56" />;
+}
+
+function formatPrice(value: number): string {
+    return `TZS ${new Intl.NumberFormat('en-TZ', { maximumFractionDigits: 0 }).format(value)}`;
+}
+
+function formatTimeType(value: string): string {
+    return value.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function HeroTrainingLane({ stats }: { stats: PlatformStats }) {
@@ -167,8 +195,266 @@ function HeroTrainingLane({ stats }: { stats: PlatformStats }) {
     );
 }
 
+function ProgramsShowcase({ programs, actionHref }: { programs: FeaturedProgram[]; actionHref: string }) {
+    return (
+        <section id="programs" className="border-y border-[#e8e0ec] bg-white py-20 sm:py-28">
+            <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <p className="text-[10px] font-extrabold tracking-[0.2em] text-[#8a5aa6]">BUILT FOR YOUR GOAL</p>
+                        <h2
+                            className="mt-3 max-w-[620px] text-4xl leading-[1.02] font-bold tracking-[-0.055em] text-[#24142b] sm:text-5xl"
+                            style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                        >
+                            Featured training programs.
+                        </h2>
+                    </div>
+                    <Link href={actionHref} className="group inline-flex items-center gap-2 text-sm font-extrabold text-[#662199]">
+                        See your full training space <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                </div>
+
+                {programs.length > 0 ? (
+                    <div className="mt-10 flex snap-x gap-5 overflow-x-auto pb-5 lg:grid lg:grid-cols-4 lg:overflow-visible">
+                        {programs.map((program, index) => (
+                            <Link
+                                key={program.id}
+                                href={actionHref}
+                                aria-label={`Explore ${program.name}`}
+                                className="group w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-[24px] border border-[#e9e1ed] bg-white shadow-[0_16px_35px_rgba(53,27,67,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(53,27,67,0.16)] sm:w-[320px] lg:w-auto lg:max-w-none"
+                            >
+                                <div className="relative h-64 overflow-hidden bg-[#4a285a]">
+                                    {program.cover_image_url ? (
+                                        <img
+                                            src={program.cover_image_url}
+                                            alt=""
+                                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,#8e3cc9_0,transparent_28%),linear-gradient(145deg,#6b2490,#291630)]">
+                                            <div className="absolute -right-7 -bottom-7 size-40 rounded-full border-[28px] border-white/8" />
+                                        </div>
+                                    )}
+                                    <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-b from-black/5 via-transparent to-[#170b1f]/90 p-5">
+                                        <div className="flex items-center justify-between gap-3">
+                                            <span className="flex size-9 items-center justify-center rounded-full bg-[#ddfc64] text-[10px] font-black text-[#211726]">
+                                                {String(index + 1).padStart(2, '0')}
+                                            </span>
+                                            <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-extrabold tracking-[0.08em] text-[#4f1e68] uppercase">
+                                                {program.program_type ?? 'Training'}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-extrabold tracking-[0.14em] text-[#ddfc64] uppercase">
+                                                {program.program_category ?? 'Fitness'}
+                                            </p>
+                                            <h3 className="mt-2 text-2xl leading-tight font-black tracking-[-0.04em] text-white">{program.name}</h3>
+                                            <p className="mt-2 line-clamp-2 text-xs leading-5 font-medium text-white/70">{program.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="h-1 bg-[#ddfc64]" />
+                                <div className="flex min-h-20 items-center gap-3 px-4 py-4">
+                                    <span className="flex items-center gap-1.5 text-xs font-bold text-[#776b7d]">
+                                        <Clock3 className="size-4 text-[#662199]" /> {formatTimeType(program.time_type)}
+                                    </span>
+                                    <div className="ml-auto text-right">
+                                        <p className="text-[8px] font-extrabold tracking-[0.12em] text-[#9a8f9f]">FROM</p>
+                                        <p className="mt-1 text-sm font-black text-[#211726]">{formatPrice(program.price)}</p>
+                                    </div>
+                                    <span className="flex size-9 items-center justify-center rounded-full bg-[#662199] text-white">
+                                        <ArrowRight className="size-4" />
+                                    </span>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="mt-10 rounded-[24px] bg-[#f7f1fa] px-6 py-12 text-center text-sm font-bold text-[#756b79]">
+                        New training programs are being prepared.
+                    </div>
+                )}
+            </div>
+        </section>
+    );
+}
+
+function TrainersShowcase({ trainers, actionHref }: { trainers: FeaturedTrainer[]; actionHref: string }) {
+    return (
+        <section id="trainers" className="bg-[#291630] py-20 text-white sm:py-28">
+            <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <p className="text-[10px] font-extrabold tracking-[0.2em] text-[#ddfc64]">COACHING ROSTER</p>
+                        <h2
+                            className="mt-3 max-w-[620px] text-4xl leading-[1.02] font-bold tracking-[-0.055em] sm:text-5xl"
+                            style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                        >
+                            Meet your next trainer.
+                        </h2>
+                    </div>
+                    <Link href={actionHref} className="group inline-flex items-center gap-2 text-sm font-extrabold text-[#ddfc64]">
+                        Find your coach <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                </div>
+
+                {trainers.length > 0 ? (
+                    <div className="mt-10 flex snap-x gap-5 overflow-x-auto pb-5 lg:grid lg:grid-cols-4 lg:overflow-visible">
+                        {trainers.map((trainer) => (
+                            <Link
+                                key={trainer.id}
+                                href={actionHref}
+                                aria-label={`View ${trainer.name}`}
+                                className="group w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-[24px] bg-white text-[#211726] shadow-[0_18px_45px_rgba(0,0,0,0.2)] transition duration-300 hover:-translate-y-1 sm:w-[320px] lg:w-auto lg:max-w-none"
+                            >
+                                <div className="relative h-60 overflow-hidden bg-[#4a285a]">
+                                    {trainer.image_url ? (
+                                        <img
+                                            src={trainer.image_url}
+                                            alt=""
+                                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-[linear-gradient(145deg,#7f359f,#321a3d)]">
+                                            <UserRound className="size-20 text-white/55" strokeWidth={1.25} />
+                                        </div>
+                                    )}
+                                    <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-b from-transparent via-transparent to-[#160b1b]/95 p-5">
+                                        <span className="flex w-fit items-center gap-2 rounded-full bg-[#1a191c]/75 px-3 py-2 text-[9px] font-black tracking-[0.12em]">
+                                            <span className="size-2 rounded-full bg-[#ddfc64]" /> AVAILABLE
+                                        </span>
+                                        <div>
+                                            <p className="text-[10px] font-extrabold tracking-[0.14em] text-[#ddfc64] uppercase">
+                                                {trainer.program_type ?? 'Personal training'}
+                                            </p>
+                                            <h3 className="mt-1 text-2xl font-black tracking-[-0.04em] text-white">{trainer.name}</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="h-1 bg-[#ddfc64]" />
+                                <div className="p-4">
+                                    <div className="flex items-center gap-3">
+                                        <span className="flex size-10 items-center justify-center rounded-xl bg-[#f3eaf8] text-[#662199]">
+                                            <Medal className="size-5" />
+                                        </span>
+                                        <div>
+                                            <p className="text-[8px] font-extrabold tracking-[0.1em] text-[#9a8f9f]">TRAINING LEVEL</p>
+                                            <p className="mt-1 text-sm font-extrabold">{trainer.training_level ?? 'All levels'}</p>
+                                        </div>
+                                        <div className="ml-auto text-right">
+                                            <p className="text-[8px] font-extrabold tracking-[0.1em] text-[#9a8f9f]">PER SESSION</p>
+                                            <p className="mt-1 text-sm font-black">{formatPrice(trainer.session_price)}</p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 flex items-center border-t border-[#e8e0ec] pt-4">
+                                        <span className="text-xs font-semibold text-[#7c7181]">Profile & availability</span>
+                                        <span className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#662199] px-3 py-2 text-xs font-extrabold text-white">
+                                            <CalendarDays className="size-4" /> Book
+                                        </span>
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="mt-10 rounded-[24px] border border-white/10 bg-white/5 px-6 py-12 text-center text-sm font-bold text-white/60">
+                        Trainer availability will appear here soon.
+                    </div>
+                )}
+            </div>
+        </section>
+    );
+}
+
+function ProductsShowcase({ products, actionHref }: { products: FeaturedProduct[]; actionHref: string }) {
+    return (
+        <section id="shop" className="bg-[#f6f1f8] py-20 sm:py-28">
+            <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <p className="text-[10px] font-extrabold tracking-[0.2em] text-[#8a5aa6]">FITNESS SHOP</p>
+                        <h2
+                            className="mt-3 max-w-[620px] text-4xl leading-[1.02] font-bold tracking-[-0.055em] text-[#24142b] sm:text-5xl"
+                            style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                        >
+                            Essentials for every session.
+                        </h2>
+                    </div>
+                    <Link href={actionHref} className="group inline-flex items-center gap-2 text-sm font-extrabold text-[#662199]">
+                        Open the fitness shop <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                </div>
+
+                {products.length > 0 ? (
+                    <div className="mt-10 flex snap-x gap-5 overflow-x-auto pb-5 lg:grid lg:grid-cols-4 lg:overflow-visible">
+                        {products.map((product) => {
+                            const currentPrice = product.has_offer && product.offer_price !== null ? product.offer_price : product.price;
+
+                            return (
+                                <Link
+                                    key={product.id}
+                                    href={actionHref}
+                                    aria-label={`Shop ${product.name}`}
+                                    className="group w-[78vw] max-w-[300px] shrink-0 snap-start overflow-hidden rounded-[24px] border border-[#e7dcea] bg-white shadow-[0_15px_32px_rgba(53,27,67,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(53,27,67,0.14)] sm:w-[300px] lg:w-auto lg:max-w-none"
+                                >
+                                    <div className="relative flex h-52 items-center justify-center overflow-hidden bg-[#ede4f1]">
+                                        {product.image_url ? (
+                                            <img
+                                                src={product.image_url}
+                                                alt=""
+                                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                            />
+                                        ) : (
+                                            <>
+                                                <div className="absolute size-44 rounded-full bg-white/65" />
+                                                <ShoppingBag className="relative size-16 text-[#662199]" strokeWidth={1.35} />
+                                            </>
+                                        )}
+                                        <span className="absolute top-4 left-4 rounded-full bg-white px-3 py-1.5 text-[9px] font-extrabold tracking-[0.08em] text-[#662199] uppercase shadow-sm">
+                                            {product.product_category ?? 'Fitness gear'}
+                                        </span>
+                                        {product.has_offer && product.offer_price !== null ? (
+                                            <span className="absolute top-4 right-4 rounded-full bg-[#ddfc64] px-3 py-1.5 text-[9px] font-black tracking-[0.08em] text-[#283009]">
+                                                OFFER
+                                            </span>
+                                        ) : null}
+                                    </div>
+                                    <div className="p-5">
+                                        <h3 className="text-lg font-black tracking-[-0.025em] text-[#211726]">{product.name}</h3>
+                                        <p className="mt-2 line-clamp-2 min-h-10 text-xs leading-5 font-medium text-[#7c7181]">
+                                            {product.description}
+                                        </p>
+                                        <div className="mt-5 flex items-end gap-3 border-t border-[#ece4ef] pt-4">
+                                            <div>
+                                                <p className="text-[8px] font-extrabold tracking-[0.1em] text-[#9a8f9f]">PRICE</p>
+                                                <p className="mt-1 text-base font-black text-[#211726]">{formatPrice(currentPrice)}</p>
+                                                {product.has_offer && product.offer_price !== null ? (
+                                                    <p className="mt-1 text-[10px] font-bold text-[#9a8f9f] line-through">
+                                                        {formatPrice(product.price)}
+                                                    </p>
+                                                ) : null}
+                                            </div>
+                                            <span className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#662199] px-3 py-2.5 text-xs font-extrabold text-white">
+                                                <ShoppingBag className="size-4" /> Shop
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="mt-10 rounded-[24px] bg-white px-6 py-12 text-center text-sm font-bold text-[#756b79]">
+                        Shop products will appear here soon.
+                    </div>
+                )}
+            </div>
+        </section>
+    );
+}
+
 export default function Welcome() {
-    const { auth, platformStats } = usePage<SharedData & { platformStats: PlatformStats }>().props;
+    const { auth, platformStats, featuredPrograms, featuredTrainers, featuredProducts } = usePage<WelcomeProps>().props;
     const primaryHref = auth.user ? route('dashboard') : route('register');
     const primaryLabel = auth.user ? 'Open dashboard' : 'Create account';
 
@@ -184,34 +470,62 @@ export default function Welcome() {
             </Head>
 
             <div className="min-h-screen overflow-x-hidden bg-[#fbf9fc] text-[#281a2e]" style={{ fontFamily: 'Manrope, sans-serif' }}>
-                <header className="relative z-30 mx-auto flex w-full max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12 lg:py-7">
-                    <Link href={route('home')} aria-label="Lalisha FitZone home">
-                        <BrandMark />
-                    </Link>
-                    <nav className="flex items-center gap-2 sm:gap-3" aria-label="Account navigation">
-                        {auth.user ? (
+                <header className="relative z-30 border-b border-[#e8e0ec] bg-white/95 backdrop-blur">
+                    <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-5 px-5 py-4 sm:px-8 lg:px-12">
+                        <Link href={route('home')} aria-label="Lalisha FitZone home">
+                            <BrandLogoImage className="h-11 w-44 sm:w-48" />
+                        </Link>
+
+                        <nav className="hidden items-center rounded-full bg-[#f4eff7] p-1 md:flex" aria-label="Catalogue navigation">
+                            {catalogueNavigation.map((item) => (
+                                <Link
+                                    key={item.routeName}
+                                    href={route(item.routeName)}
+                                    prefetch
+                                    className="rounded-full px-5 py-2.5 text-xs font-extrabold text-[#716477] transition hover:bg-white hover:text-[#662199] hover:shadow-sm"
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </nav>
+
+                        <nav className="flex items-center gap-2 sm:gap-3" aria-label="Account navigation">
+                            {auth.user ? (
+                                <Link
+                                    href={route('dashboard')}
+                                    className="inline-flex items-center gap-2 rounded-full bg-[#291630] px-5 py-3 text-xs font-extrabold text-white transition hover:bg-[#662199] focus-visible:ring-2 focus-visible:ring-[#662199] focus-visible:ring-offset-2"
+                                >
+                                    Dashboard <ArrowRight className="size-4" />
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link
+                                        href={route('login')}
+                                        className="hidden rounded-full px-4 py-3 text-xs font-extrabold text-[#4f3f57] transition hover:bg-[#efe8f2] focus-visible:ring-2 focus-visible:ring-[#662199] sm:block"
+                                    >
+                                        Log in
+                                    </Link>
+                                    <Link
+                                        href={route('register')}
+                                        className="inline-flex items-center gap-2 rounded-full bg-[#662199] px-5 py-3 text-xs font-extrabold text-white transition hover:bg-[#54157f] focus-visible:ring-2 focus-visible:ring-[#662199] focus-visible:ring-offset-2"
+                                    >
+                                        Join FitZone <ArrowRight className="size-4" />
+                                    </Link>
+                                </>
+                            )}
+                        </nav>
+                    </div>
+
+                    <nav className="flex justify-center gap-1 border-t border-[#eee7f1] px-4 py-2 md:hidden" aria-label="Mobile catalogue navigation">
+                        {catalogueNavigation.map((item) => (
                             <Link
-                                href={route('dashboard')}
-                                className="inline-flex items-center gap-2 rounded-full bg-[#2a1731] px-5 py-3 text-xs font-extrabold text-white transition hover:bg-[#662199] focus-visible:ring-2 focus-visible:ring-[#662199] focus-visible:ring-offset-2"
+                                key={item.routeName}
+                                href={route(item.routeName)}
+                                className="rounded-full px-4 py-2 text-[11px] font-extrabold text-[#716477] transition hover:bg-[#f4eff7] hover:text-[#662199]"
                             >
-                                Dashboard <ArrowRight className="size-4" />
+                                {item.label}
                             </Link>
-                        ) : (
-                            <>
-                                <Link
-                                    href={route('login')}
-                                    className="rounded-full px-4 py-3 text-xs font-extrabold text-[#4f3f57] transition hover:bg-[#efe8f2] focus-visible:ring-2 focus-visible:ring-[#662199]"
-                                >
-                                    Log in
-                                </Link>
-                                <Link
-                                    href={route('register')}
-                                    className="inline-flex items-center gap-2 rounded-full bg-[#2a1731] px-5 py-3 text-xs font-extrabold text-white transition hover:bg-[#662199] focus-visible:ring-2 focus-visible:ring-[#662199] focus-visible:ring-offset-2"
-                                >
-                                    Join FitZone <ArrowRight className="size-4" />
-                                </Link>
-                            </>
-                        )}
+                        ))}
                     </nav>
                 </header>
 
@@ -241,7 +555,7 @@ export default function Welcome() {
                                     <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
                                 </Link>
                                 <a
-                                    href="#experience"
+                                    href="#programs"
                                     className="inline-flex items-center justify-center gap-3 rounded-full border border-[#dcd1e1] bg-white px-7 py-4 text-sm font-extrabold text-[#3e2d46] transition hover:border-[#b99bc7] hover:bg-[#f7f1f9] focus-visible:ring-2 focus-visible:ring-[#662199]"
                                 >
                                     Explore the platform <ChevronRight className="size-4" />
@@ -261,54 +575,9 @@ export default function Welcome() {
                         <HeroTrainingLane stats={platformStats} />
                     </section>
 
-                    <section id="experience" className="border-y border-[#e8e0ec] bg-white py-24 sm:py-28">
-                        <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
-                            <div className="grid gap-8 lg:grid-cols-[.72fr_1.28fr] lg:items-end">
-                                <div>
-                                    <p className="text-[10px] font-extrabold tracking-[0.2em] text-[#8b5ba2]">THE FITZONE SYSTEM</p>
-                                    <h2
-                                        className="mt-4 max-w-[500px] text-4xl leading-[1.02] font-bold tracking-[-0.055em] text-[#24142b] sm:text-5xl"
-                                        style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-                                    >
-                                        Everything around your next move.
-                                    </h2>
-                                </div>
-                                <p className="max-w-[600px] text-base leading-7 font-medium text-[#776b7c] lg:justify-self-end">
-                                    Lalisha connects discovery, coaching, and checkout so your fitness plan does not get scattered across different
-                                    apps and conversations.
-                                </p>
-                            </div>
-
-                            <div className="mt-14 grid gap-5 lg:grid-cols-3">
-                                {features.map((feature, index) => {
-                                    const Icon = feature.icon;
-                                    return (
-                                        <article
-                                            key={feature.title}
-                                            className="group relative overflow-hidden rounded-[28px] border border-[#e8e0ec] bg-[#fcfafc] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#cfb9da] hover:shadow-[0_20px_50px_rgba(58,30,71,0.1)] sm:p-8"
-                                        >
-                                            <div className="flex items-start justify-between">
-                                                <div
-                                                    className={`flex size-12 items-center justify-center rounded-2xl ${feature.accent} ${feature.iconColor}`}
-                                                >
-                                                    <Icon className="size-5" />
-                                                </div>
-                                                <span className="text-xs font-extrabold text-[#c0b2c6]">0{index + 1}</span>
-                                            </div>
-                                            <p className="mt-10 text-[9px] font-extrabold tracking-[0.18em] text-[#91779d]">{feature.eyebrow}</p>
-                                            <h3 className="mt-3 max-w-[320px] text-2xl leading-tight font-extrabold tracking-[-0.04em] text-[#2a1931]">
-                                                {feature.title}
-                                            </h3>
-                                            <p className="mt-4 text-sm leading-7 font-medium text-[#776b7c]">{feature.description}</p>
-                                            <div className="mt-7 flex items-center gap-2 text-xs font-extrabold text-[#662199]">
-                                                Explore <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                                            </div>
-                                        </article>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </section>
+                    <ProgramsShowcase programs={featuredPrograms} actionHref={route('explore.programs')} />
+                    <TrainersShowcase trainers={featuredTrainers} actionHref={route('explore.trainers')} />
+                    <ProductsShowcase products={featuredProducts} actionHref={route('explore.shop')} />
 
                     <section className="mx-auto w-full max-w-[1440px] px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
                         <div className="overflow-hidden rounded-[36px] bg-[#2a1731] text-white shadow-[0_28px_70px_rgba(45,20,57,0.2)]">
