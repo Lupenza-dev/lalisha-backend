@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProgamCategoryController;
@@ -27,8 +28,71 @@ Route::get('/', function () {
             'trainers' => Trainer::where('status', 'active')->count(),
             'products' => ShopProduct::where('status', 'active')->count(),
         ],
+        'featuredPrograms' => TrainingProgram::query()
+            ->select(['id', 'name', 'time_type', 'program_category_id', 'program_type_id', 'description', 'price', 'cover_image'])
+            ->with(['programCategory:id,name', 'programType:id,name'])
+            ->where('status', 'active')
+            ->latest()
+            ->limit(4)
+            ->get()
+            ->map(fn (TrainingProgram $program) => [
+                'id' => $program->id,
+                'name' => $program->name,
+                'time_type' => $program->time_type,
+                'description' => $program->description,
+                'price' => (float) $program->price,
+                'cover_image_url' => $program->cover_image
+                    ? Storage::disk('public')->url($program->cover_image)
+                    : null,
+                'program_category' => $program->programCategory?->name,
+                'program_type' => $program->programType?->name,
+            ]),
+        'featuredTrainers' => Trainer::query()
+            ->select(['id', 'name', 'image', 'program_type_id', 'training_level_id', 'session_price', 'availability'])
+            ->with(['programType:id,name', 'trainingLevel:id,name'])
+            ->where('status', 'active')
+            ->where('availability', 'available')
+            ->latest()
+            ->limit(4)
+            ->get()
+            ->map(fn (Trainer $trainer) => [
+                'id' => $trainer->id,
+                'name' => $trainer->name,
+                'image_url' => $trainer->image
+                    ? Storage::disk('public')->url($trainer->image)
+                    : null,
+                'program_type' => $trainer->programType?->name,
+                'training_level' => $trainer->trainingLevel?->name,
+                'session_price' => (float) $trainer->session_price,
+                'availability' => $trainer->availability,
+            ]),
+        'featuredProducts' => ShopProduct::query()
+            ->select(['id', 'product_category_id', 'name', 'description', 'price', 'has_offer', 'offer_price', 'image'])
+            ->with('productCategory:id,name')
+            ->where('status', 'active')
+            ->latest()
+            ->limit(4)
+            ->get()
+            ->map(fn (ShopProduct $product) => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'price' => (float) $product->price,
+                'has_offer' => $product->has_offer,
+                'offer_price' => $product->offer_price !== null ? (float) $product->offer_price : null,
+                'image_url' => $product->image
+                    ? Storage::disk('public')->url($product->image)
+                    : null,
+                'product_category' => $product->productCategory?->name,
+            ]),
     ]);
 })->name('home');
+
+Route::prefix('explore')->name('explore.')->group(function () {
+    Route::get('programs', [ExploreController::class, 'programs'])->name('programs');
+    Route::get('trainers', [ExploreController::class, 'trainers'])->name('trainers');
+    Route::get('shop', [ExploreController::class, 'shop'])->name('shop');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {

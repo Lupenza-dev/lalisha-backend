@@ -21,6 +21,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::create($data);
+        $user->assignRole('Customer');
 
         return response()->json([
             'message' => 'Account created successfully.',

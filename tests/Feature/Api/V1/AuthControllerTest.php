@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\V1;
 
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\ClientRepository;
@@ -22,15 +23,22 @@ class AuthControllerTest extends TestCase
 
     public function test_member_can_register_and_receive_an_access_token(): void
     {
+        $this->seed(RoleSeeder::class);
+
         $this->postJson('/api/v1/register', [
             'name' => 'New Member',
             'email' => 'new@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
+            'role' => 'Admin',
         ])->assertCreated()
             ->assertJsonStructure(['token', 'user' => ['id', 'name', 'email']]);
 
         $this->assertDatabaseHas('users', ['email' => 'new@example.com']);
+        $user = User::where('email', 'new@example.com')->firstOrFail();
+
+        $this->assertTrue($user->hasRole('Customer'));
+        $this->assertFalse($user->hasRole('Admin'));
     }
 
     public function test_member_can_login_and_receive_an_access_token(): void
